@@ -1,12 +1,48 @@
-# React + Vite
+# โปรแกรมจัดการรายการเมนูอาหาร (สั่งอาหาร + รับออเดอร์ผ่าน Discord) (React)
+* แสดงรายการอาหาร: เมนูจะถูกจัดกลุ่มตามหมวดหมู่ เพื่อให้ลูกค้าเลือกดูได้ง่ายขึ้น
+* เพิ่มรายการอาหารลงตะกร้า: ลูกค้าสามารถเลือกและเพิ่มอาหารลงในตะกร้าได้
+* ดูสรุปคำสั่งซื้อ: แสดงรายการอาหารทั้งหมดในตะกร้า พร้อมจำนวนและราคารวม
+* ส่งคำสั่งซื้อไปยัง Discord: เมื่อยืนยันคำสั่งซื้อ รายละเอียดจะถูกส่งไปยัง Discord Webhook เพื่อแจ้งให้ร้านอาหารทราบ
+* แสดงรูปภาพประกอบเมนู: เพิ่มรูปภาพสินค้า เพื่อให้เมนูน่าสนใจยิ่งขึ้น
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## ดูตัวอย่างการใช้งาน (Live Demo)
+**คุณสามารถลองใช้งานโปรแกรมจัดการรายการเมนูอาหารได้ที่นี่:**
+(<a href="https://pnwboon.github.io/table-food-ordering-react/" target="_blank" rel="noopener noreferrer">**โปรแกรมจัดการรายการเมนูอาหาร (สั่งอาหาร + รับออเดอร์ผ่าน Discord)**</a>)
 
-Currently, two official plugins are available:
+## ภาษาและเทคโนโลยีที่ใช้
+* **Frontend:** React (HTML, CSS, JavaScript)
+* **Material UI:** (<a href="https://mui.com/">คลิกเพื่อใช้งาน MUI</a>)
+* **Discord Webhook Node:** สำหรับเชื่อมต่อกับ Discord เพื่อส่งข้อมูลคำสั่งซื้อ
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## สำคัญ!!
+* **ต้องแก้ไข WEBHOOK_URL (Discord) ก่อนใช้งาน**
+```
+table-food-ordering-react\src\utils\discordWebhook.js
+```
+* **บรรทัดที่ 6**
+```
+const WEBHOOK_URL = ''
+```
 
-## Expanding the ESLint configuration
+## การติดตั้งและใช้งาน
+1.  **โคลน Repository:**
+    เปิด Terminal หรือ Command Prompt แล้วใช้คำสั่ง:
+    ```bash
+    git clone https://github.com/pnwboon/todo-react.git
+    ```
+2.  **เข้าสู่ Directory โปรเจกต์:**
+    หลังจากโคลนเสร็จ ให้เข้าไปในโฟลเดอร์ของโปรเจกต์:
+    ```bash
+    cd todo-react
+    ```
+3.  **ติดตั้ง Dependencies:**
+    ติดตั้งแพ็คเกจและไลบรารีที่จำเป็นสำหรับโปรเจกต์:
+    ```bash
+    npm install
+    ```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+4.  **รันแอปพลิเคชัน:**
+    เริ่มต้นแอปพลิเคชันในโหมดพัฒนา:
+    ```bash
+    npm run dev
+    ```
