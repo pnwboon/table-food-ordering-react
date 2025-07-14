@@ -31,7 +31,7 @@ function TableSelectionPage({ onSelectTable }) {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            เลือกหมายเลขโต๊ะ
+            โปรแกรมจัดการรายการเมนูอาหาร
           </Typography>
         </Toolbar>
       </AppBar>

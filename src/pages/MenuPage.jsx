@@ -1,5 +1,5 @@
 // src/pages/MenuPage.jsx
-import React, { useState, useEffect } from 'react'; // ต้อง import useEffect ด้วย
+import React, { useState, useEffect } from 'react';
 import {
   AppBar,
   Toolbar,
@@ -21,8 +21,8 @@ import {
   DialogActions,
   TextField,
   Divider,
-  ImageList, // ไม่ได้ใช้ในโค้ดที่คุณให้มา แต่ยังคงไว้
-  ImageListItem // ไม่ได้ใช้ในโค้ดที่คุณให้มา แต่ยังคงไว้
+  ImageList,
+  ImageListItem
 } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AddIcon from '@mui/icons-material/Add';
@@ -40,6 +40,10 @@ const truncateText = (text, maxLength) => {
   return text;
 };
 
+// **กำหนดความกว้างของ Card ที่คุณต้องการ (เป็น Pixel)**
+const FIXED_CARD_WIDTH = 150; // ตัวอย่าง: กำหนดให้ Card กว้าง 200px
+// หรืออาจจะลอง 220, 250 แล้วแต่ความเหมาะสมกับดีไซน์และเนื้อหาของคุณ
+
 function MenuPage({ selectedTable, onAddToCart, onViewCart, cartItemCount }) {
   const [selectedCategory, setSelectedCategory] = useState(0);
   const [openDetailDialog, setOpenDetailDialog] = useState(false);
@@ -47,57 +51,40 @@ function MenuPage({ selectedTable, onAddToCart, onViewCart, cartItemCount }) {
   const [itemQuantity, setItemQuantity] = useState(1);
   const [itemNotes, setItemNotes] = useState('');
 
-  // Debugging: Log initial state and prop changes
   useEffect(() => {
-      console.log('MenuPage: Component Mounted/Updated.');
-      console.log('MenuPage: Current cartItemCount prop:', cartItemCount);
+    console.log('MenuPage: Component Mounted/Updated. Cart item count:', cartItemCount);
   }, [cartItemCount]);
 
-
   const handleTabChange = (event, newValue) => {
-    console.log('MenuPage: Tab changed to:', categories[newValue - 1] || 'ทั้งหมด');
     setSelectedCategory(newValue);
   };
 
   const handleOpenDetail = (menuItem) => {
-    console.log('MenuPage: --- handleOpenDetail Start ---');
-    console.log('MenuPage: Selected menu item for detail:', menuItem.name);
     setSelectedMenuItem(menuItem);
-    setItemQuantity(1); // Reset quantity to 1
+    setItemQuantity(1);
     setItemNotes('');
     setOpenDetailDialog(true);
-    console.log('MenuPage: Dialog quantity reset to 1, notes reset.');
-    console.log('MenuPage: --- handleOpenDetail End ---');
   };
 
   const handleCloseDetail = () => {
-    console.log('MenuPage: Closing detail dialog.');
     setOpenDetailDialog(false);
     setSelectedMenuItem(null);
-    setItemQuantity(1); // เพิ่มการ reset quantity เมื่อปิด dialog เพื่อความแน่ใจ
-    setItemNotes(''); // เพิ่มการ reset notes เมื่อปิด dialog เพื่อความแน่ใจ
+    setItemQuantity(1);
+    setItemNotes('');
   };
 
   const handleQuantityChange = (type) => {
-    console.log(`MenuPage: handleQuantityChange called, type: ${type}, current itemQuantity: ${itemQuantity}`);
     if (type === 'add') {
       setItemQuantity((prev) => prev + 1);
-      console.log('MenuPage: Quantity increased to', itemQuantity + 1);
     } else if (type === 'remove' && itemQuantity > 1) {
       setItemQuantity((prev) => prev - 1);
-      console.log('MenuPage: Quantity decreased to', itemQuantity - 1);
-    } else if (type === 'remove' && itemQuantity === 1) {
-      console.log('MenuPage: Cannot decrease quantity below 1.');
     }
   };
 
   const handleAddItemToCart = () => {
     if (selectedMenuItem) {
-      console.log('MenuPage: --- handleAddItemToCart Start ---');
-      console.log(`MenuPage: Calling onAddToCart for: ${selectedMenuItem.name}, Quantity: ${itemQuantity}, Notes: "${itemNotes}"`);
       onAddToCart(selectedMenuItem, itemQuantity, itemNotes);
-      handleCloseDetail(); // ปิด Dialog หลังเพิ่มลงตะกร้า
-      console.log('MenuPage: --- handleAddItemToCart End ---');
+      handleCloseDetail();
     }
   };
 
@@ -161,130 +148,140 @@ function MenuPage({ selectedTable, onAddToCart, onViewCart, cartItemCount }) {
             return null;
           }
 
-            return (
+          return (
             <Box key={categoryName} sx={{ mb: 4 }}>
               <Typography
-              variant="h5"
-              component="div"
-              sx={{
-                mt: { xs: 2, sm: 3 },
-                mb: { xs: 1, sm: 2 },
-                fontWeight: 'bold',
-                color: 'text.primary',
-                textAlign: 'center',
-                width: '100%',
-              }}
+                variant="h5"
+                component="div"
+                sx={{
+                  mt: { xs: 2, sm: 3 },
+                  mb: { xs: 1, sm: 2 },
+                  fontWeight: 'bold',
+                  color: 'text.primary',
+                  textAlign: 'center',
+                  width: '100%',
+                }}
               >
-              {categoryName}
-              <Divider sx={{ mt: 1 }} />
+                {categoryName}
+                <Divider sx={{ mt: 1 }} />
               </Typography>
 
               <Grid
-              container
-              spacing={2}
-              justifyContent="center"
-              maxWidth="330px"
-              margin="0 auto"
+                container
+                spacing={2}
+                // *** เริ่มการแก้ไขเพื่อ Fixed Width ***
+                justifyContent="center" // จัด Card ให้อยู่กึ่งกลางในแถว
+                // *** สิ้นสุดการแก้ไข ***
               >
-              {itemsToDisplay.map((item) => (
-                <Grid
-                key={item.id}
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'stretch',
-                }}
-                >
-                <Card
-                  sx={{
-                  width: 150,
-                  height: 215,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  cursor: 'pointer',
-                  borderRadius: { xs: 2, sm: 3 },
-                  boxShadow: { xs: 1, sm: 3 },
-                  minWidth: 150,
-                  maxWidth: 150,
-                  }}
-                  onClick={() => handleOpenDetail(item)}
-                >
-                  <CardMedia
-                  component="img"
-                  image={item.image}
-                  alt={item.name}
-                  sx={{
-                    objectFit: 'cover',
-                    height: 100,
-                    width: '100%',
-                    borderTopLeftRadius: { xs: 8, sm: 12 },
-                    borderTopRightRadius: { xs: 8, sm: 12 },
-                  }}
-                  />
-                  <CardContent
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    flexGrow: 1,
-                    p: 1.5,
-                    minWidth: 0,
-                    height: 'calc(215px - 100px - 12px)',
-                  }}
-                  >
-                  <Box sx={{
-                    flexGrow: 1,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'flex-start',
-                  }}>
-                    {/* **ชื่อภาษาไทย** */}
-                    <Typography
-                    variant="h6"
-                    component="div"
+                {itemsToDisplay.map((item) => (
+                  <Grid
+                    key={item.id}
+                    // *** เริ่มการแก้ไขเพื่อ Fixed Width ***
+                    // ลบ xs, sm, md, lg ออกไป เนื่องจากเราจะกำหนด width ที่ Card โดยตรง
+                    // xs={6}
+                    // sm={4}
+                    // md={3}
+                    // lg={2.4}
                     sx={{
-                      fontSize: { xs: '0.95rem', sm: '1.1rem' },
-                      lineHeight: '1.2em',
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      mb: 0.5,
-                    }}
-                    >
-                    {truncateText(item.name, 20)}
-                    </Typography>
-                    {/* **ชื่อภาษาอังกฤษ** */}
-                    <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{
-                      fontSize: { xs: '0.8rem', sm: '0.95rem' },
-                      lineHeight: '1.2em',
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                    }}
-                    >
-                    {truncateText(item.englishName, 20)}
-                    </Typography>
-                  </Box>
-                  {/* **ราคาจะอยู่ด้านล่างเสมอด้วย mt: 'auto'** */}
-                  <Typography
-                    variant="h6"
-                    color="primary"
-                    sx={{
-                    mt: 'auto',
-                    fontSize: { xs: '1rem', sm: '1.2rem' },
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'stretch',
+                      flexBasis: 'auto', // สำคัญ: ป้องกันไม่ให้ Grid item ขยายตัวเมื่อแถวไม่เต็ม
+                      flexGrow: 0,       // สำคัญ: ป้องกันไม่ให้ Grid item ขยายตัวเมื่อแถวไม่เต็ม
+                      // *** สิ้นสุดการแก้ไข ***
                     }}
                   >
-                    {item.price} ฿
-                  </Typography>
-                  </CardContent>
-                </Card>
-                </Grid>
-              ))}
+                    <Card
+                      sx={{
+                        // *** เริ่มการแก้ไขเพื่อ Fixed Width ***
+                        width: FIXED_CARD_WIDTH, // กำหนดความกว้างของ Card เป็นค่าคงที่
+                        minWidth: FIXED_CARD_WIDTH, // ให้แน่ใจว่าไม่เล็กกว่าที่กำหนด
+                        maxWidth: FIXED_CARD_WIDTH, // ให้แน่ใจว่าไม่ใหญ่กว่าที่กำหนด
+                        // *** สิ้นสุดการแก้ไข ***
+                        minHeight: 250, // ความสูงยังคงใช้ minHeight เพื่อความยืดหยุ่น
+                        display: 'flex',
+                        flexDirection: 'column',
+                        cursor: 'pointer',
+                        borderRadius: { xs: 2, sm: 3 },
+                        boxShadow: { xs: 1, sm: 3 },
+                      }}
+                      onClick={() => handleOpenDetail(item)}
+                    >
+                      <CardMedia
+                        component="img"
+                        image={item.image}
+                        alt={item.name}
+                        sx={{
+                          objectFit: 'cover',
+                          height: 100,
+                          width: '100%', // ให้รูปภาพขยายเต็มความกว้างของ Card ที่ Fixed
+                          borderTopLeftRadius: { xs: 8, sm: 12 },
+                          borderTopRightRadius: { xs: 8, sm: 12 },
+                        }}
+                      />
+                      <CardContent
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          flexGrow: 1,
+                          p: 1.5,
+                          minWidth: 0,
+                        }}
+                      >
+                        <Box sx={{
+                          flexGrow: 1,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'flex-start',
+                        }}>
+                          {/* **ชื่อภาษาไทย** */}
+                          <Typography
+                            variant="h6"
+                            component="div"
+                            sx={{
+                              fontSize: { xs: '0.95rem', sm: '1.1rem' },
+                              lineHeight: '1.2em',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              mb: 0.5,
+                            }}
+                          >
+                            {truncateText(item.name, 20)}
+                          </Typography>
+                          {/* **ชื่อภาษาอังกฤษ** */}
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            sx={{
+                              fontSize: { xs: '0.8rem', sm: '0.95rem' },
+                              lineHeight: '1.2em',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                            }}
+                          >
+                            {truncateText(item.englishName, 20)}
+                          </Typography>
+                        </Box>
+                        {/* **ราคาจะอยู่ด้านล่างเสมอด้วย mt: 'auto'** */}
+                        <Typography
+                          variant="h6"
+                          color="primary"
+                          sx={{
+                            mt: 'auto',
+                            fontSize: { xs: '1rem', sm: '1.2rem' },
+                          }}
+                        >
+                          {item.price} ฿
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
               </Grid>
             </Box>
-            );
+          );
         })}
 
         {/* Floating Cart Button and Dialog remain unchanged */}
@@ -345,7 +342,6 @@ function MenuPage({ selectedTable, onAddToCart, onViewCart, cartItemCount }) {
                     <CloseIcon />
                   </IconButton>
                 </Box>
-                {/* แก้ไขตรงนี้: แยก Typography ของภาษาอังกฤษและราคาออกจากกัน */}
                 <Typography variant="subtitle1" component="div" color="text.secondary" sx={{ mb: 1 }}>
                   {selectedMenuItem.englishName}
                 </Typography>
@@ -354,13 +350,12 @@ function MenuPage({ selectedTable, onAddToCart, onViewCart, cartItemCount }) {
                 </Typography>
               </DialogTitle>
               <DialogContent dividers sx={{ px: 2, py: 1 }}>
-                {/* ส่วนที่เพิ่มสำหรับแสดงรูปภาพของเมนู */}
                 {selectedMenuItem.image && (
                   <Box
                     sx={{
                       display: 'flex',
                       justifyContent: 'center',
-                      zIndex: 1, // เพิ่ม zIndex
+                      zIndex: 1,
                       mb: 2,
                       maxHeight: '200px',
                       overflow: 'hidden',
@@ -378,7 +373,6 @@ function MenuPage({ selectedTable, onAddToCart, onViewCart, cartItemCount }) {
                     />
                   </Box>
                 )}
-                {/* สิ้นสุดส่วนที่เพิ่มสำหรับแสดงรูปภาพเมนู */}
 
                 <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
                   {selectedMenuItem.description}
