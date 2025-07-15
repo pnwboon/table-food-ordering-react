@@ -28,12 +28,12 @@ const WEBHOOK_URL = ''
 1.  **โคลน Repository:**
     เปิด Terminal หรือ Command Prompt แล้วใช้คำสั่ง:
     ```bash
-    git clone https://github.com/pnwboon/todo-react.git
+    git clone https://github.com/pnwboon/table-food-ordering-react.git
     ```
 2.  **เข้าสู่ Directory โปรเจกต์:**
     หลังจากโคลนเสร็จ ให้เข้าไปในโฟลเดอร์ของโปรเจกต์:
     ```bash
-    cd todo-react
+    cd table-food-ordering-react
     ```
 3.  **ติดตั้ง Dependencies:**
     ติดตั้งแพ็คเกจและไลบรารีที่จำเป็นสำหรับโปรเจกต์:
